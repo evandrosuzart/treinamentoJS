@@ -15,29 +15,28 @@ class Feed extends Component{
 
     async componentDidMount(){
         this.registerToSocket();
-        
-        const response =  await api.get('posts');
-        
-        this.setState({feed : response.data});
 
+        const response = await api.get('posts');
+    
+        this.setState({feed: response.data});
     }
+    
 
     handleLike = id => {
         api.post(`/posts/${id}/like`);
     }
 
     registerToSocket = () =>{
-        
         const socket = io('http://localhost:3333');
 
-        socket.on('post', newPost => {
+        socket.on('post', newPost =>{
             this.setState({feed:[newPost, ...this.state.feed]});
         })
 
-        socket.on('like', likedPost =>  {
+        socket.on('like', likedPost =>{
             this.setState({
-                feed: this.state.feed.map(post =>
-                    post._id === likedPost._id ? likedPost : post
+                feed: this.state.feed.map(post => 
+                    post._id === likedPost._id ? likedPost : post     
                 )
             });
         })
@@ -59,15 +58,15 @@ class Feed extends Component{
                     <img src={`http://localhost:3333/files/${post.image}`} alt='' /> 
                     <footer>
                         <div className='actions'>
-                            <button type='button'onClick={ () =>this.handleLike(post._id)}>
+                            <button type='button'onClick={ () => this.handleLike(post._id)}>
                                 <img src={like} alt='' /> 
                             </button>
-                            <button type='button'onClick={ () =>this.handleLike(post._id)}>
+                            
                                 <img src={comment} alt='' />
-                            </button>
-                            <button type='button'onClick={ () =>this.handleLike(post._id)}>
+                            
+                            
                                 <img src={send} alt='' />  
-                            </button>
+                            
                         </div>
                         <strong>{post.likes}</strong>
                         <p>{post.description}<span>{post.hashtags}</span></p>
